@@ -34,6 +34,7 @@ export default {
                 'bg-[#f8982b]': product.name === 'Vita Basic',
                 'bg-[#47b0e0]': product.name === 'Vita Plus',
                 'bg-[#d13d3d]': product.name === 'Vita Premium',
+                'bg-[#44b64e]': product.name !== 'Vita' //Nuevo producto agregado
             }" :key="product.id">
                 <h2 class="text-center text-4xl mb-1 font-bold uppercase h-10">{{ product.name }}</h2>
                 <p class="text-center mb-2 text-xl italic h-[75px]">{{ product.description }}</p>

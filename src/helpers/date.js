@@ -6,7 +6,7 @@
  * @returns {string|null}
  */
 export function dateToString(date) {
-    if (date == null) return null;
+    if (date == null) return null
 
     const dateFormatter = new Intl.DateTimeFormat("es-AR", {
         year: "numeric",
@@ -15,7 +15,7 @@ export function dateToString(date) {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-    }).format(date);
+    }).format(date)
 
-    return dateFormatter.replace(",", "");
+    return dateFormatter.replace(",", "")
 }
