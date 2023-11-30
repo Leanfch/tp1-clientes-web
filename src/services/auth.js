@@ -3,19 +3,19 @@ import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
     signOut,
-} from "firebase/auth";
-import { auth } from "./firebase.js";
-import { createUserProfile, getUserProfileById } from "./user.js";
+} from "firebase/auth"
+import { auth } from "./firebase.js"
+import { createUserProfile, getUserProfileById } from "./user.js"
 
 let userData = {
     id: null,
     email: null,
     role: null,
-};
-let observers = [];
+}
+let observers = []
 
 if (localStorage.getItem("user")) {
-    userData = JSON.parse(localStorage.getItem("user"));
+    userData = JSON.parse(localStorage.getItem("user"))
 }
 
 onAuthStateChanged(auth, (user) => {
@@ -25,39 +25,42 @@ onAuthStateChanged(auth, (user) => {
                 id: user.uid,
                 email: user.email,
                 role: profile.role,
-            });
-            localStorage.setItem("user", JSON.stringify(userData));
-        });
+            })
+            localStorage.setItem("user", JSON.stringify(userData))
+        })
     } else {
-        clearUserData();
-        localStorage.removeItem("user");
+        clearUserData()
+        localStorage.removeItem("user")
     }
-});
+})
 
 /**
  *
- * @param {{email: string, password: string, role: string}} user
+ * @param {{email: string, password: string, role: string, name: string, last_name: string}} user
  * @returns {Promise}
  */
-export async function register({ email, password }) {
+export async function register({ email, password, name, last_name }) {
     try {
+        console.log(email, password, name, last_name)
         const userCredentials = await createUserWithEmailAndPassword(
             auth,
             email,
             password
-        );
+        )
 
-        createUserProfile(userCredentials.user.uid, { email });
+        createUserProfile(userCredentials.user.uid, { email, name, last_name })
 
         return {
             id: userCredentials.user.uid,
             email: userCredentials.user.email,
-        };
+            name,
+            last_name,
+        }
     } catch (error) {
         return {
             code: error.code,
             message: error.message,
-        };
+        }
     }
 }
 
@@ -74,16 +77,16 @@ export function login({ email, password }) {
                 id: userCredentials.user.uid,
                 email: userCredentials.user.email,
                 role: userCredentials.user.role,
-            });
+            })
 
-            return { ...userData };
+            return { ...userData }
         })
         .catch((error) => {
             return {
                 code: error.code,
                 message: error.message,
-            };
-        });
+            }
+        })
 }
 
 /**
@@ -91,10 +94,10 @@ export function login({ email, password }) {
  * @returns {Promise}
  */
 export function logout() {
-    const promise = signOut(auth);
-    clearUserData();
+    const promise = signOut(auth)
+    clearUserData()
 
-    return signOut(auth);
+    return signOut(auth)
 }
 
 /**
@@ -105,20 +108,20 @@ export function logout() {
  * @returns {() => void} Cancela la subscripción
  */
 export function subscribeToAuth(observer) {
-    observers.push(observer);
+    observers.push(observer)
 
-    notify(observer);
+    notify(observer)
 
     return () => {
-        observers = observers.filter((obs) => obs !== observer);
-    };
+        observers = observers.filter((obs) => obs !== observer)
+    }
 }
 
 /**
  * Notifica a todos los observers.
  */
 function notifyAll() {
-    observers.forEach((observer) => notify(observer));
+    observers.forEach((observer) => notify(observer))
 }
 
 /**
@@ -127,7 +130,7 @@ function notifyAll() {
  * @param {({id: null|string, email: null|string}) => void} observer
  */
 function notify(observer) {
-    observer({ ...userData });
+    observer({ ...userData })
 }
 
 /**
@@ -138,17 +141,17 @@ function setUserData(newData) {
     userData = {
         ...userData,
         ...newData,
-    };
-    notifyAll();
+    }
+    notifyAll()
 }
 
 function clearUserData() {
     setUserData({
         id: null,
         email: null,
-    });
+    })
 }
 
 export function getUserData() {
-    return { ...userData };
+    return { ...userData }
 }

@@ -13,6 +13,8 @@ export default {
             newUser: {
                 email: '',
                 password: '',
+                name: '',
+                last_name: '',
             },
         }
     },
@@ -39,12 +41,22 @@ export default {
                 <div class="mb-3">
                     <BaseLabel for="email">E-mail</BaseLabel>
                     <BaseInput placeholder="ejemplo@ejemplo.com" type="email" id="email" v-model="newUser.email"
-                        :disabled="registerLoading" />
+                        :disabled="registerLoading" autocomplete="off" />
+                </div>
+                <div class="mb-3">
+                    <BaseLabel for="name">Nombre</BaseLabel>
+                    <BaseInput placeholder="Nombre" type="text" id="name" v-model="newUser.name" :disabled="registerLoading"
+                        autocomplete="off" />
+                </div>
+                <div class="mb-3">
+                    <BaseLabel for="last_name">Apellido</BaseLabel>
+                    <BaseInput placeholder="Apellido" type="text" id="last_name" v-model="newUser.last_name"
+                        :disabled="registerLoading" autocomplete="off" />
                 </div>
                 <div class="mb-3">
                     <BaseLabel for="password">Contraseña</BaseLabel>
-                    <BaseInput type="password" id="password" v-model="newUser.password" :disabled="registerLoading"
-                        required />
+                    <BaseInput type="password" id="password" v-model="newUser.password" :disabled="registerLoading" required
+                        autocomplete="off" />
                 </div>
                 <BaseButton class="mt-3" :loading="registerLoading">Registrarse</BaseButton>
             </form>
