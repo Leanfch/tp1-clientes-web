@@ -7,6 +7,15 @@ service cloud.firestore {
     match /chats/{chat} {
     	allow read, create: if request.auth != null;
     }
+    // El usuario puede cambiar su propia información
+    match /users/{userId} {
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null;
+    }
+    
+		match /hosting/{document=**} {
+      allow read, write: if true;
+    }
     
     // Debe estar autenticado para leer el perfil
     match /users/{user} {
@@ -33,13 +42,5 @@ service cloud.firestore {
         	request.auth.uid in get(/databases/$(database)/documents/private-chats/$(chat)).data.users && request.auth.uid == request.resource.data.senderId;
       }
     }
-  }
-}
-
-[C]users {
-  {
-    [D]C6YkBlycWWhYWUndxwJrI7BbhZ02: { email: 'leandro@hola.com', role: user },
-    [D]YMnVxTO1P1SBTywGlGgAETXPH6G3: { email: 'martin@hola.com', role: user },
-    [D]bSl0DPiI9SabCjaYNEva1LzQjCP2: { email: 'loco@hola.com', role: admin }
   }
 }
